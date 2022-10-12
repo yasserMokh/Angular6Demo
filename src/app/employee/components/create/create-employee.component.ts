@@ -9,15 +9,53 @@ export class CreateEmployeeComponent implements OnInit {
 
   employeeForm: FormGroup;
 
-  constructor(private _formBuilder: FormBuilder) { 
+  validationMessages = {
+    'fullName': {
+      'required': 'Full Name is required.',
+      'minlength': 'Full Name must be greater than 2 characters.',
+      'maxlength': 'Full Name must be less than 20 characters.'
+    },
+    'contactPreference': {
+      'required': 'Contact Preference is required.'
+    },
+    'email': {
+      'required': 'Email is required.'
+    },
+    'phone': {
+      'required': 'Phone is required.'
+    },
+    'skillName': {
+      'required': 'Skill Name is required.',
+    },
+    'experienceInYears': {
+      'required': 'Experience is required.',
+    },
+    'proficiency': {
+      'required': 'Proficiency is required.',
+    },
+  };
+
+  formErrors = {
+    'fullName': '',
+    'contactPreference': '',
+    'email': '',
+    'phone': '',
+    'skillName': '',
+    'experienceInYears': '',
+    'proficiency': ''
+  };
+
+  constructor(private _formBuilder: FormBuilder) {
 
     this.employeeForm = this._formBuilder.group({
       fullName: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(19)]],
+      contactPreference: ['', Validators.required],
       email: [''],
+      phone: [''],
       skills: this._formBuilder.group({
-        skillName: [''],
-        experienceInYears: [''],
-        proficiency: ['']
+        skillName: ['', Validators.required],
+        experienceInYears: ['', Validators.required],
+        proficiency: ['', Validators.required]
       })
     });
     /*this.employeeForm = new FormGroup({
@@ -31,22 +69,19 @@ export class CreateEmployeeComponent implements OnInit {
     });*/
   }
 
-  logFormControlsKeyValue(formGroup:FormGroup):void{
-    Object.keys(formGroup.controls).forEach(key=>{
-      let control = formGroup.get(key);
-      if(control instanceof FormGroup){
-        this.logFormControlsKeyValue(control);
-      }else{
-        console.log('key: ', key, ', value: ', control?.value)
-      }
-    });
-  }
+
 
   ngOnInit(): void {
+    this.employeeForm.valueChanges.subscribe(data => {
+      this.logValidationErrors(this.employeeForm);
+    });
+    this.employeeForm.get('contactPreference')?.valueChanges.subscribe(value => {
+      this.onContactPreferenceChange(value);
+    })
   }
 
-  onFormSubmit():void{
-    console.log(this.employeeForm.value);
+  onFormSubmit(): void {
+    //console.log(this.employeeForm.value);
   }
 
   onLoadDataClick(): void {
@@ -61,8 +96,57 @@ export class CreateEmployeeComponent implements OnInit {
     });
   }
 
-  onLogControlsClick():void{
+  onLogControlsClick(): void {
+    //this.logValidationErrors(this.employeeForm);
+    //console.log(this.formErrors);
     this.logFormControlsKeyValue(this.employeeForm);
+  }
+
+  logFormControlsKeyValue(formGroup: FormGroup): void {
+    Object.keys(formGroup.controls).forEach(key => {
+      let control = formGroup.get(key);
+      if (control instanceof FormGroup) {
+        this.logFormControlsKeyValue(control);
+      } else {
+        console.log('key: ', key, ', value: ', control?.value)
+      }
+    });
+  }
+
+  logValidationErrors(formGroup: FormGroup = this.employeeForm): void {
+    Object.keys(formGroup.controls).forEach((key) => {
+            const control = formGroup.get(key);
+      if (control instanceof FormGroup) {
+        this.logValidationErrors(control);
+      } else {        
+        const k = key as keyof typeof this.formErrors;
+        this.formErrors[k] = '';
+        if (control && !control.valid && (control.touched || control.dirty)) {
+          // const kk = key as keyof typeof this.validationMessages;
+          const messages = this.validationMessages[k];
+          for (const errorKey in control.errors) {
+            if (errorKey) {
+              const ek = errorKey as keyof typeof messages;
+              this.formErrors[k] += messages[ek] + ' ';
+            }
+          }
+        }
+      }
+    });
+  }
+
+  onContactPreferenceChange(selectedValue: string): void {
+    const emailCtrl = this.employeeForm.get('email');
+    const phoneCtrl = this.employeeForm.get('phone');
+    if (selectedValue === 'email') {
+      emailCtrl?.setValidators(Validators.required);
+      phoneCtrl?.removeValidators(Validators.required);
+    } else {
+      emailCtrl?.removeValidators(Validators.required);
+      phoneCtrl?.setValidators(Validators.required);
+    }
+    emailCtrl?.updateValueAndValidity();
+    phoneCtrl?.updateValueAndValidity();
   }
 
 }
