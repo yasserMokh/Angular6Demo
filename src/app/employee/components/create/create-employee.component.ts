@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { AbstractControl, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { CustomValidators } from 'src/app/Shared/custom.validators';
 
 @Component({
   selector: 'app-create-employee',
@@ -57,7 +58,7 @@ export class CreateEmployeeComponent implements OnInit {
     this.employeeForm = this._formBuilder.group({
       fullName: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(19)]],
       contactPreference: ['', Validators.required],
-      email: ['', this.validateEmailDomain('outlook.com')],
+      email: ['', CustomValidators.validateEmailDomain('outlook.com')],
       phone: [''],
       skills: this._formBuilder.group({
         skillName: ['', Validators.required],
@@ -161,22 +162,6 @@ export class CreateEmployeeComponent implements OnInit {
       }
     });
   }
-
-  validateEmailDomain(domain: string){
-    return (control: AbstractControl):{[key: string]: any} | null =>{
-    if(!control || !control.value){           
-      return null;
-    }
-    const email: string=control.value;
-    
-    const domainExtraxted: string=email.substring(email.lastIndexOf('@')+1);
-    if(domainExtraxted.toLowerCase() === domain.toLocaleLowerCase()){            
-        return null;
-    }    
-    return {'emailDomainNotValid': true};
-  };
-}
-
   //#endregion [/Functions]  
 
 }
