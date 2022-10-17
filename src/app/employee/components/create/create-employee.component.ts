@@ -7,6 +7,8 @@ import { AbstractControl, FormBuilder, FormControl, FormGroup, Validators } from
 })
 export class CreateEmployeeComponent implements OnInit {
 
+  //#region [Members]
+
   employeeForm: FormGroup;
 
   validationMessages = {
@@ -19,7 +21,8 @@ export class CreateEmployeeComponent implements OnInit {
       'required': 'Contact Preference is required.'
     },
     'email': {
-      'required': 'Email is required.'
+      'required': 'Email is required.',
+      'emailDomainNotValid': 'Email domain not valid.'
     },
     'phone': {
       'required': 'Phone is required.'
@@ -45,12 +48,16 @@ export class CreateEmployeeComponent implements OnInit {
     'proficiency': ''
   };
 
+  //#endregion [/Members]
+
+  //#region [Constructor]
+
   constructor(private _formBuilder: FormBuilder) {
 
     this.employeeForm = this._formBuilder.group({
       fullName: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(19)]],
       contactPreference: ['', Validators.required],
-      email: [''],
+      email: ['', this.validateEmailDomain],
       phone: [''],
       skills: this._formBuilder.group({
         skillName: ['', Validators.required],
@@ -69,7 +76,9 @@ export class CreateEmployeeComponent implements OnInit {
     });*/
   }
 
+  //#endregion [/Constructor]
 
+  //#region [Events]
 
   ngOnInit(): void {
     this.employeeForm.valueChanges.subscribe(data => {
@@ -101,6 +110,24 @@ export class CreateEmployeeComponent implements OnInit {
     //console.log(this.formErrors);
     this.logFormControlsKeyValue(this.employeeForm);
   }
+
+  onContactPreferenceChange(selectedValue: string): void {
+    const emailCtrl = this.employeeForm.get('email');
+    const phoneCtrl = this.employeeForm.get('phone');
+    if (selectedValue === 'email') {
+      emailCtrl?.setValidators(Validators.required);
+      phoneCtrl?.removeValidators(Validators.required);
+    } else {
+      emailCtrl?.removeValidators(Validators.required);
+      phoneCtrl?.setValidators(Validators.required);
+    }
+    emailCtrl?.updateValueAndValidity();
+    phoneCtrl?.updateValueAndValidity();
+  }
+
+  //#endregion [/Events]
+
+  //#region [Functions]
 
   logFormControlsKeyValue(formGroup: FormGroup): void {
     Object.keys(formGroup.controls).forEach(key => {
@@ -135,18 +162,19 @@ export class CreateEmployeeComponent implements OnInit {
     });
   }
 
-  onContactPreferenceChange(selectedValue: string): void {
-    const emailCtrl = this.employeeForm.get('email');
-    const phoneCtrl = this.employeeForm.get('phone');
-    if (selectedValue === 'email') {
-      emailCtrl?.setValidators(Validators.required);
-      phoneCtrl?.removeValidators(Validators.required);
-    } else {
-      emailCtrl?.removeValidators(Validators.required);
-      phoneCtrl?.setValidators(Validators.required);
+  validateEmailDomain(control: AbstractControl):{[key: string]: any} | null{
+    if(!control || !control.value){      
+      return null;
     }
-    emailCtrl?.updateValueAndValidity();
-    phoneCtrl?.updateValueAndValidity();
+    const email: string=control.value;
+    
+    const domain: string=email.substring(email.lastIndexOf('@')+1);
+    if(domain.toLowerCase() === 'gmail.com'){      
+        return null;
+    }    
+    return {'emailDomainNotValid': true};
   }
+
+  //#endregion [/Functions]  
 
 }
