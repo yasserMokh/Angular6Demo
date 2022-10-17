@@ -24,6 +24,11 @@
         <span class="invalid-feedback" [hidden]="!formErrors.email" >{{formErrors.email}}</span>           
     </div>
     <div class="mb-3">
+        <label for="confirmEmail" class="form-label">Confirm Email</label>
+        <input formControlName="confirmEmail" type="text" class="form-control" [class.is-invalid]="formErrors.confirmEmail" (blur)="logValidationErrors()" id="confirmEmail" name="confirmEmail">
+        <span class="invalid-feedback" [hidden]="!formErrors.confirmEmail" >{{formErrors.confirmEmail}}</span>           
+    </div>
+    <div class="mb-3">
         <label for="phoneNumber" class="form-label">Phone Number</label>
         <input type="tel" class="form-control" id="phone" name="phone" [class.is-invalid]="formErrors.phone" formControlName="phone" (blur)="logValidationErrors()">
         <span class="invalid-feedback" [hidden]="!formErrors.phone">{{formErrors.phone}}</span>  

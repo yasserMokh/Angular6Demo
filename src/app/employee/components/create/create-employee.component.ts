@@ -25,6 +25,10 @@ export class CreateEmployeeComponent implements OnInit {
       'required': 'Email is required.',
       'emailDomainNotValid': 'Email domain not valid.'
     },
+    'confirmEmail': {
+      'required': 'Confirm Email is required.',
+      'valueMismatch': 'Email and Confirm Email do not match.'
+    },
     'phone': {
       'required': 'Phone is required.'
     },
@@ -43,6 +47,7 @@ export class CreateEmployeeComponent implements OnInit {
     'fullName': '',
     'contactPreference': '',
     'email': '',
+    'confirmEmail':'',
     'phone': '',
     'skillName': '',
     'experienceInYears': '',
@@ -58,7 +63,8 @@ export class CreateEmployeeComponent implements OnInit {
     this.employeeForm = this._formBuilder.group({
       fullName: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(19)]],
       contactPreference: ['', Validators.required],
-      email: ['', CustomValidators.validateEmailDomain('outlook.com')],
+      email: ['', [Validators.required, CustomValidators.validateEmailDomain('outlook.com')]],
+      confirmEmail: ['', Validators.required],
       phone: [''],
       skills: this._formBuilder.group({
         skillName: ['', Validators.required],
@@ -82,12 +88,13 @@ export class CreateEmployeeComponent implements OnInit {
   //#region [Events]
 
   ngOnInit(): void {
+    this.employeeForm.get('confirmEmail')?.addValidators(CustomValidators.confirmValidator(this.employeeForm.get('email')));
     this.employeeForm.valueChanges.subscribe(data => {
       this.logValidationErrors(this.employeeForm);
     });
     this.employeeForm.get('contactPreference')?.valueChanges.subscribe(value => {
       this.onContactPreferenceChange(value);
-    })
+    });
   }
 
   onFormSubmit(): void {
@@ -112,17 +119,13 @@ export class CreateEmployeeComponent implements OnInit {
     this.logFormControlsKeyValue(this.employeeForm);
   }
 
-  onContactPreferenceChange(selectedValue: string): void {
-    const emailCtrl = this.employeeForm.get('email');
+  onContactPreferenceChange(selectedValue: string): void {    
     const phoneCtrl = this.employeeForm.get('phone');
-    if (selectedValue === 'email') {
-      emailCtrl?.setValidators(Validators.required);
+    if (selectedValue === 'email') {      
       phoneCtrl?.removeValidators(Validators.required);
-    } else {
-      emailCtrl?.removeValidators(Validators.required);
+    } else {      
       phoneCtrl?.setValidators(Validators.required);
-    }
-    emailCtrl?.updateValueAndValidity();
+    }    
     phoneCtrl?.updateValueAndValidity();
   }
 
@@ -162,6 +165,8 @@ export class CreateEmployeeComponent implements OnInit {
       }
     });
   }
+
+  
   //#endregion [/Functions]  
 
 }

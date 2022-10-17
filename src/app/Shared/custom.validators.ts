@@ -15,4 +15,19 @@ export class CustomValidators{
         return {'emailDomainNotValid': true};
       };
     }
+
+    static confirmValidator(controlToCompareWith: AbstractControl | null){
+        return (controlToCompare: AbstractControl): {[key: string] : any} | null =>{
+            if(!controlToCompare || !controlToCompare.value){
+                console.log('No Value !');
+                return null;
+            }
+          if(controlToCompare.value.toLocaleLowerCase() === controlToCompareWith?.value.toLocaleLowerCase()){
+            console.log('Success :)');
+            return null;
+          }
+          console.log('Wrong XXX');
+          return {'valueMismatch': true};
+        }
+      }
 }
