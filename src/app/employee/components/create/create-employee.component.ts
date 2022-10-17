@@ -57,7 +57,7 @@ export class CreateEmployeeComponent implements OnInit {
     this.employeeForm = this._formBuilder.group({
       fullName: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(19)]],
       contactPreference: ['', Validators.required],
-      email: ['', this.validateEmailDomain],
+      email: ['', this.validateEmailDomain('outlook.com')],
       phone: [''],
       skills: this._formBuilder.group({
         skillName: ['', Validators.required],
@@ -162,18 +162,20 @@ export class CreateEmployeeComponent implements OnInit {
     });
   }
 
-  validateEmailDomain(control: AbstractControl):{[key: string]: any} | null{
-    if(!control || !control.value){      
+  validateEmailDomain(domain: string){
+    return (control: AbstractControl):{[key: string]: any} | null =>{
+    if(!control || !control.value){           
       return null;
     }
     const email: string=control.value;
     
-    const domain: string=email.substring(email.lastIndexOf('@')+1);
-    if(domain.toLowerCase() === 'gmail.com'){      
+    const domainExtraxted: string=email.substring(email.lastIndexOf('@')+1);
+    if(domainExtraxted.toLowerCase() === domain.toLocaleLowerCase()){            
         return null;
     }    
     return {'emailDomainNotValid': true};
-  }
+  };
+}
 
   //#endregion [/Functions]  
 
