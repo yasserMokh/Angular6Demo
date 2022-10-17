@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { AbstractControl, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { AbstractControl, FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { CustomValidators } from 'src/app/Shared/custom.validators';
 
 @Component({
@@ -47,7 +47,7 @@ export class CreateEmployeeComponent implements OnInit {
     'fullName': '',
     'contactPreference': '',
     'email': '',
-    'confirmEmail':'',
+    'confirmEmail': '',
     'phone': '',
     'skillName': '',
     'experienceInYears': '',
@@ -66,11 +66,7 @@ export class CreateEmployeeComponent implements OnInit {
       email: ['', [Validators.required, CustomValidators.validateEmailDomain('outlook.com')]],
       confirmEmail: ['', Validators.required],
       phone: [''],
-      skills: this._formBuilder.group({
-        skillName: ['', Validators.required],
-        experienceInYears: ['', Validators.required],
-        proficiency: ['', Validators.required]
-      })
+      skills: this._formBuilder.array([this.getNewSkillsFormGroup()])
     });
     /*this.employeeForm = new FormGroup({
       fullName: new FormControl(),
@@ -119,19 +115,27 @@ export class CreateEmployeeComponent implements OnInit {
     this.logFormControlsKeyValue(this.employeeForm);
   }
 
-  onContactPreferenceChange(selectedValue: string): void {    
+  onContactPreferenceChange(selectedValue: string): void {
     const phoneCtrl = this.employeeForm.get('phone');
-    if (selectedValue === 'email') {      
+    if (selectedValue === 'email') {
       phoneCtrl?.removeValidators(Validators.required);
-    } else {      
+    } else {
       phoneCtrl?.setValidators(Validators.required);
-    }    
+    }
     phoneCtrl?.updateValueAndValidity();
   }
 
   //#endregion [/Events]
 
   //#region [Functions]
+
+  getNewSkillsFormGroup(): FormGroup {
+    return this._formBuilder.group({
+      skillName: ['', Validators.required],
+      experienceInYears: ['', Validators.required],
+      proficiency: ['', Validators.required]
+    });
+  }
 
   logFormControlsKeyValue(formGroup: FormGroup): void {
     Object.keys(formGroup.controls).forEach(key => {
@@ -146,27 +150,33 @@ export class CreateEmployeeComponent implements OnInit {
 
   logValidationErrors(formGroup: FormGroup = this.employeeForm): void {
     Object.keys(formGroup.controls).forEach((key) => {
-            const control = formGroup.get(key);
-      if (control instanceof FormGroup) {
-        this.logValidationErrors(control);
-      } else {        
-        const k = key as keyof typeof this.formErrors;
-        this.formErrors[k] = '';
-        if (control && !control.valid && (control.touched || control.dirty)) {
-          // const kk = key as keyof typeof this.validationMessages;
-          const messages = this.validationMessages[k];
-          for (const errorKey in control.errors) {
-            if (errorKey) {
-              const ek = errorKey as keyof typeof messages;
-              this.formErrors[k] += messages[ek] + ' ';
-            }
+      const control = formGroup.get(key);
+      const k = key as keyof typeof this.formErrors;
+      this.formErrors[k] = '';
+      if (control && !control.valid && (control.touched || control.dirty)) {
+        // const kk = key as keyof typeof this.validationMessages;
+        const messages = this.validationMessages[k];
+        for (const errorKey in control.errors) {
+          if (errorKey) {
+            const ek = errorKey as keyof typeof messages;
+            this.formErrors[k] += messages[ek] + ' ';
           }
         }
+      }
+      if (control instanceof FormGroup) {
+        this.logValidationErrors(control);
+      }
+      if (control instanceof FormArray) {
+        control.controls.forEach(ctrl => {
+          if(ctrl instanceof FormGroup){
+            this.logValidationErrors(ctrl);  
+          }
+        });
       }
     });
   }
 
-  
+
   //#endregion [/Functions]  
 
 }

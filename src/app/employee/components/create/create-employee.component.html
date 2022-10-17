@@ -1,95 +1,112 @@
-<form [formGroup]="employeeForm" (ngSubmit)="onFormSubmit()" >
+<form [formGroup]="employeeForm" (ngSubmit)="onFormSubmit()">
     <div class="mb-3">
         <label for="name" class="form-label">Full Name</label>
-        <input formControlName="fullName" type="text" class="form-control"  [class.is-invalid]="formErrors.fullName" (blur)="logValidationErrors()" id="name" name="name">
-        <span class="invalid-feedback" [hidden]="!formErrors.fullName" >{{formErrors.fullName}}</span>        
-    </div>   
+        <input formControlName="fullName" type="text" class="form-control" [class.is-invalid]="formErrors.fullName"
+            (blur)="logValidationErrors()" id="name" name="name">
+        <span class="invalid-feedback" [hidden]="!formErrors.fullName">{{formErrors.fullName}}</span>
+    </div>
     <div class="mb-3">
         <label class="form-label">Contact Preference</label>
         <div class="form-control" [class.is-invalid]="formErrors.contactPreference">
             <div class="form-check form-check-inline">
-                <input class="form-check-input" type="radio" id="radioContactEmail" formControlName="contactPreference" name="contactPreference" value="email" (blur)="logValidationErrors()">
+                <input class="form-check-input" type="radio" id="radioContactEmail" formControlName="contactPreference"
+                    name="contactPreference" value="email" (blur)="logValidationErrors()">
                 <label class="form-check-label" for="radioContactEmail">Email</label>
             </div>
             <div class="form-check form-check-inline">
-                <input class="form-check-input" type="radio" id="radioContactPhone" formControlName="contactPreference" name="contactPreference" value="phone" (blur)="logValidationErrors()">
+                <input class="form-check-input" type="radio" id="radioContactPhone" formControlName="contactPreference"
+                    name="contactPreference" value="phone" (blur)="logValidationErrors()">
                 <label class="form-check-label" for="radioContactPhone">Phone</label>
             </div>
         </div>
-        <span class="invalid-feedback" [hidden]="!formErrors.contactPreference">{{formErrors.contactPreference}}</span>   
-    </div> 
+        <span class="invalid-feedback" [hidden]="!formErrors.contactPreference">{{formErrors.contactPreference}}</span>
+    </div>
     <div class="mb-3">
         <label for="email" class="form-label">Email</label>
-        <input formControlName="email" type="text" class="form-control" [class.is-invalid]="formErrors.email" (blur)="logValidationErrors()" id="email" name="email">
-        <span class="invalid-feedback" [hidden]="!formErrors.email" >{{formErrors.email}}</span>           
+        <input formControlName="email" type="text" class="form-control" [class.is-invalid]="formErrors.email"
+            (blur)="logValidationErrors()" id="email" name="email">
+        <span class="invalid-feedback" [hidden]="!formErrors.email">{{formErrors.email}}</span>
     </div>
     <div class="mb-3">
         <label for="confirmEmail" class="form-label">Confirm Email</label>
-        <input formControlName="confirmEmail" type="text" class="form-control" [class.is-invalid]="formErrors.confirmEmail" (blur)="logValidationErrors()" id="confirmEmail" name="confirmEmail">
-        <span class="invalid-feedback" [hidden]="!formErrors.confirmEmail" >{{formErrors.confirmEmail}}</span>           
+        <input formControlName="confirmEmail" type="text" class="form-control"
+            [class.is-invalid]="formErrors.confirmEmail" (blur)="logValidationErrors()" id="confirmEmail"
+            name="confirmEmail">
+        <span class="invalid-feedback" [hidden]="!formErrors.confirmEmail">{{formErrors.confirmEmail}}</span>
     </div>
     <div class="mb-3">
         <label for="phoneNumber" class="form-label">Phone Number</label>
-        <input type="tel" class="form-control" id="phone" name="phone" [class.is-invalid]="formErrors.phone" formControlName="phone" (blur)="logValidationErrors()">
-        <span class="invalid-feedback" [hidden]="!formErrors.phone">{{formErrors.phone}}</span>  
+        <input type="tel" class="form-control" id="phone" name="phone" [class.is-invalid]="formErrors.phone"
+            formControlName="phone" (blur)="logValidationErrors()">
+        <span class="invalid-feedback" [hidden]="!formErrors.phone">{{formErrors.phone}}</span>
     </div>
-    <div formGroupName="skills" >
-        <div class="mb-3">
-            <label for="skillName" class="form-label">Skill</label>
-            <input formControlName="skillName" type="text" class="form-control" [class.is-invalid]="formErrors.skillName" (blur)="logValidationErrors()" id="skillName" name="skillName">
-            <span class="invalid-feedback" [hidden]="!formErrors.skillName" >{{formErrors.skillName}}</span>      
-        </div>    
-        <div class="mb-3">
-            <label for="experienceInYears" class="form-label">Years of Experience</label>
-            <input formControlName="experienceInYears" type="number" class="form-control" [class.is-invalid]="formErrors.experienceInYears" (blur)="logValidationErrors()" id="experienceInYears" name="experienceInYears">        
-            <span class="invalid-feedback" [hidden]="!formErrors.experienceInYears" >{{formErrors.experienceInYears}}</span>
+    <div formArrayName="skills">
+        <div formGroupName="0">
+            <div class="mb-3">
+                <label for="skillName" class="form-label">Skill</label>
+                <input formControlName="skillName" type="text" class="form-control"
+                    [class.is-invalid]="formErrors.skillName" (blur)="logValidationErrors()" id="skillName"
+                    name="skillName">
+                <span class="invalid-feedback" [hidden]="!formErrors.skillName">{{formErrors.skillName}}</span>
+            </div>
+            <div class="mb-3">
+                <label for="experienceInYears" class="form-label">Years of Experience</label>
+                <input formControlName="experienceInYears" type="number" class="form-control"
+                    [class.is-invalid]="formErrors.experienceInYears" (blur)="logValidationErrors()"
+                    id="experienceInYears" name="experienceInYears">
+                <span class="invalid-feedback"
+                    [hidden]="!formErrors.experienceInYears">{{formErrors.experienceInYears}}</span>
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Proficiency</label>
+                <div class="form-control" [class.is-invalid]="formErrors.proficiency">
+                    <div class="form-check form-check-inline">
+                        <input formControlName="proficiency" class="form-check-input" type="radio"
+                            id="proficiencyBeginner" (blur)="logValidationErrors()" name="proficiency" value="beginner">
+                        <label class="form-check-label" for="proficiencyBeginner">Beginner</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input formControlName="proficiency" class="form-check-input" type="radio"
+                            id="proficiencyIntermediate" (blur)="logValidationErrors()" name="proficiency"
+                            value="intermediate">
+                        <label class="form-check-label" for="proficiencyIntermediate">Intermediate</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input formControlName="proficiency" class="form-check-input" type="radio"
+                            id="proficiencyAdvanced" (blur)="logValidationErrors()" name="proficiency" value="advanced">
+                        <label class="form-check-label" for="proficiencyAdvanced">Advanced</label>
+                    </div>
+                </div>
+                <span class="invalid-feedback" [hidden]="!formErrors.proficiency">{{formErrors.proficiency}}</span>
+            </div>
         </div>
-        <div class="mb-3">
-            <label class="form-label">Proficiency</label>
-            <div class="form-control" [class.is-invalid]="formErrors.proficiency">
-                <div class="form-check form-check-inline">
-                    <input formControlName="proficiency" class="form-check-input" type="radio" id="proficiencyBeginner" (blur)="logValidationErrors()" name="proficiency" value="beginner">
-                    <label class="form-check-label" for="proficiencyBeginner">Beginner</label>
-                </div>
-                <div class="form-check form-check-inline">
-                    <input formControlName="proficiency"  class="form-check-input" type="radio" id="proficiencyIntermediate" (blur)="logValidationErrors()" name="proficiency" value="intermediate" >
-                    <label class="form-check-label" for="proficiencyIntermediate">Intermediate</label>
-                </div>
-                <div class="form-check form-check-inline">
-                    <input formControlName="proficiency"  class="form-check-input" type="radio" id="proficiencyAdvanced" (blur)="logValidationErrors()" name="proficiency" value="advanced" >
-                    <label class="form-check-label" for="proficiencyAdvanced">Advanced</label>
-                </div>
-            </div>   
-            <span class="invalid-feedback" [hidden]="!formErrors.proficiency" >{{formErrors.proficiency}}</span>         
-        </div>
-
     </div>
     <div class="btn-toolbar">
         <button type="button" class="btn btn-primary me-2" (click)="onLoadDataClick()">Load Data</button>
         <button type="button" class="btn btn-primary me-2" (click)="onLogControlsClick()">Log Controls</button>
         <button type="submit" class="btn btn-primary me-2">Submit</button>
-      </div>
-   
+    </div>
+
 </form>
-<br/>
+<br />
 <table border="1">
     <tr>
-      <th style="padding: 10px">FormGroup</th>
-      <th style="padding: 10px">FormControl (fullName)</th>
+        <th style="padding: 10px">FormGroup</th>
+        <th style="padding: 10px">FormControl (fullName)</th>
     </tr>
     <tr>
-      <td style="padding: 10px">
-        touched : {{ employeeForm.touched }}
-        <br/> dirty : {{ employeeForm.dirty }}
-        <br/> valid : {{ employeeForm.valid }}
-        <br/> Form Values : {{employeeForm.value | json}}
-      </td>
-      <td style="padding: 10px">
-        touched : {{ employeeForm.get('fullName')?.touched }}
-        <br/> dirty : {{ employeeForm.get('fullName')?.dirty }}
-        <br/> valid : {{ employeeForm.get('fullName')?.valid }}
-        <br/> FullName Value : {{employeeForm.get('fullName')?.value}}
-        <br/> Errors: {{employeeForm.get('fullName')?.errors}}
-      </td>
+        <td style="padding: 10px">
+            touched : {{ employeeForm.touched }}
+            <br /> dirty : {{ employeeForm.dirty }}
+            <br /> valid : {{ employeeForm.valid }}
+            <br /> Form Values : {{employeeForm.value | json}}
+        </td>
+        <td style="padding: 10px">
+            touched : {{ employeeForm.get('fullName')?.touched }}
+            <br /> dirty : {{ employeeForm.get('fullName')?.dirty }}
+            <br /> valid : {{ employeeForm.get('fullName')?.valid }}
+            <br /> FullName Value : {{employeeForm.get('fullName')?.value}}
+            <br /> Errors: {{employeeForm.get('fullName')?.errors}}
+        </td>
     </tr>
-  </table>
+</table>
