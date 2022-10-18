@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { AbstractControl, FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
-import { CustomValidators } from 'src/app/Shared/custom.validators';
+import { CustomValidators } from 'src/app/shared/custom.validators';
+import { EmployeeFormErrors, SkillErrors } from '../../models/errors.models';
 
 @Component({
   selector: 'app-create-employee',
@@ -43,16 +44,18 @@ export class CreateEmployeeComponent implements OnInit {
     },
   };
 
-  formErrors = {
-    'fullName': '',
-    'contactPreference': '',
-    'email': '',
-    'confirmEmail': '',
-    'phone': '',
-    'skillName': '',
-    'experienceInYears': '',
-    'proficiency': ''
+
+
+  formErrors: EmployeeFormErrors = {
+    fullName: '',
+    contactPreference: '',
+    email: '',
+    confirmEmail: '',
+    phone: ''
   };
+
+  skillErrors: SkillErrors[] = [this.getNewSkillErrors()];
+
 
   //#endregion [/Members]
 
@@ -125,9 +128,18 @@ export class CreateEmployeeComponent implements OnInit {
     phoneCtrl?.updateValueAndValidity();
   }
 
+  onAddSkillClick(): void {
+    this.addSkillsFormGroup();
+  }
+
   //#endregion [/Events]
 
   //#region [Functions]
+
+  addSkillsFormGroup(): void {
+    (this.employeeForm.get('skills') as FormArray).push(this.getNewSkillsFormGroup());
+    this.skillErrors.push(this.getNewSkillErrors());
+  }
 
   getNewSkillsFormGroup(): FormGroup {
     return this._formBuilder.group({
@@ -135,6 +147,25 @@ export class CreateEmployeeComponent implements OnInit {
       experienceInYears: ['', Validators.required],
       proficiency: ['', Validators.required]
     });
+  }
+
+  getNewFormErrors(): EmployeeFormErrors {
+    return {
+      fullName: '',
+      contactPreference: '',
+      email: '',
+      confirmEmail: '',
+      phone: ''
+    };
+  }
+
+
+  getNewSkillErrors(): SkillErrors {
+    return {
+      skillName: '',
+      experienceInYears: '',
+      proficiency: ''
+    };
   }
 
   logFormControlsKeyValue(formGroup: FormGroup): void {
@@ -163,19 +194,47 @@ export class CreateEmployeeComponent implements OnInit {
           }
         }
       }
-      if (control instanceof FormGroup) {
+      /* if (control instanceof FormGroup) {
         this.logValidationErrors(control);
       }
-      if (control instanceof FormArray) {
+      if (control instanceof FormArray) {        
+        for(let i=0; i< control.controls.length; i++){}
         control.controls.forEach(ctrl => {
           if(ctrl instanceof FormGroup){
-            this.logValidationErrors(ctrl);  
+            //this.logValidationErrors(ctrl);  
+          }
+        });
+      } */
+    });
+  }
+
+  logSkillsValidationErrors(skillsFormArray: FormArray = this.employeeForm.get('skills') as FormArray): void {
+    
+    Object.keys(skillsFormArray.controls).forEach((key, index) => {
+      const control = skillsFormArray.get(key);
+      //const k = key as keyof typeof this.validationMessages;
+      if (control instanceof FormGroup) {
+        Object.keys(control.controls).forEach((sk) => {
+          let se = this.skillErrors[index];
+          const skr = sk as keyof typeof se;
+          const ctrl = control.get(sk);
+          se[skr] ='';
+          if (ctrl && !ctrl.valid && (ctrl.touched || ctrl.dirty)) {
+            //console.log('this.validationMessages[k]', this.validationMessages[skr]);
+            const messages = this.validationMessages[skr];
+            //console.log('k', k);
+            //console.log('sk', sk);
+            //console.log('skr', skr);
+            se[skr] = messages?.required;
           }
         });
       }
     });
   }
 
+  castToFormArray(control: AbstractControl | null) {
+    return control as FormArray;
+  }
 
   //#endregion [/Functions]  
 

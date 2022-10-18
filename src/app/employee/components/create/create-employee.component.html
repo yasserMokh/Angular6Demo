@@ -6,8 +6,8 @@
         <span class="invalid-feedback" [hidden]="!formErrors.fullName">{{formErrors.fullName}}</span>
     </div>
     <div class="mb-3">
-        <label class="form-label">Contact Preference</label>
-        <div class="form-control" [class.is-invalid]="formErrors.contactPreference">
+        <label class="form-label" for="contactPreference" >Contact Preference</label>
+        <div class="form-control" [class.is-invalid]="formErrors.contactPreference" id="contactPreference">
             <div class="form-check form-check-inline">
                 <input class="form-check-input" type="radio" id="radioContactEmail" formControlName="contactPreference"
                     name="contactPreference" value="email" (blur)="logValidationErrors()">
@@ -35,50 +35,55 @@
         <span class="invalid-feedback" [hidden]="!formErrors.confirmEmail">{{formErrors.confirmEmail}}</span>
     </div>
     <div class="mb-3">
-        <label for="phoneNumber" class="form-label">Phone Number</label>
+        <label for="phone" class="form-label">Phone Number</label>
         <input type="tel" class="form-control" id="phone" name="phone" [class.is-invalid]="formErrors.phone"
             formControlName="phone" (blur)="logValidationErrors()">
         <span class="invalid-feedback" [hidden]="!formErrors.phone">{{formErrors.phone}}</span>
     </div>
-    <div formArrayName="skills">
-        <div formGroupName="0">
+    <div formArrayName="skills">        
+        <div [formGroupName]="i" *ngFor="let skill of castToFormArray(employeeForm.get('skills')).controls; let i = index" >
             <div class="mb-3">
-                <label for="skillName" class="form-label">Skill</label>
+                <label [attr.for]="'skillName['+i+']'" class="form-label">Skill</label>
                 <input formControlName="skillName" type="text" class="form-control"
-                    [class.is-invalid]="formErrors.skillName" (blur)="logValidationErrors()" id="skillName"
+                    [class.is-invalid]="skillErrors[i].skillName" (blur)="logSkillsValidationErrors()" [id]="'skillName['+i+']'"
                     name="skillName">
-                <span class="invalid-feedback" [hidden]="!formErrors.skillName">{{formErrors.skillName}}</span>
+                <span class="invalid-feedback" [hidden]="!skillErrors[i].skillName">{{skillErrors[i].skillName}}</span>
             </div>
             <div class="mb-3">
-                <label for="experienceInYears" class="form-label">Years of Experience</label>
+                <label [attr.for]="'experienceInYears['+i+']'" class="form-label">Years of Experience</label>
                 <input formControlName="experienceInYears" type="number" class="form-control"
-                    [class.is-invalid]="formErrors.experienceInYears" (blur)="logValidationErrors()"
-                    id="experienceInYears" name="experienceInYears">
+                    [class.is-invalid]="skillErrors[i].experienceInYears" (blur)="logSkillsValidationErrors()"
+                    [id]="'experienceInYears['+i+']'" name="experienceInYears">
                 <span class="invalid-feedback"
-                    [hidden]="!formErrors.experienceInYears">{{formErrors.experienceInYears}}</span>
+                    [hidden]="!skillErrors[i].experienceInYears">{{skillErrors[i].experienceInYears}}</span>
             </div>
             <div class="mb-3">
-                <label class="form-label">Proficiency</label>
-                <div class="form-control" [class.is-invalid]="formErrors.proficiency">
+                <label class="form-label" [attr.for]="'proficiency['+i+']'">Proficiency</label>
+                <div class="form-control" [class.is-invalid]="skillErrors[i].proficiency" [id]="'proficiency['+i+']'">
                     <div class="form-check form-check-inline">
                         <input formControlName="proficiency" class="form-check-input" type="radio"
-                            id="proficiencyBeginner" (blur)="logValidationErrors()" name="proficiency" value="beginner">
+                            id="proficiencyBeginner" (blur)="logSkillsValidationErrors()" name="proficiency" value="beginner">
                         <label class="form-check-label" for="proficiencyBeginner">Beginner</label>
                     </div>
                     <div class="form-check form-check-inline">
                         <input formControlName="proficiency" class="form-check-input" type="radio"
-                            id="proficiencyIntermediate" (blur)="logValidationErrors()" name="proficiency"
+                            id="proficiencyIntermediate" (blur)="logSkillsValidationErrors()" name="proficiency"
                             value="intermediate">
                         <label class="form-check-label" for="proficiencyIntermediate">Intermediate</label>
                     </div>
                     <div class="form-check form-check-inline">
                         <input formControlName="proficiency" class="form-check-input" type="radio"
-                            id="proficiencyAdvanced" (blur)="logValidationErrors()" name="proficiency" value="advanced">
+                            id="proficiencyAdvanced" (blur)="logSkillsValidationErrors()" name="proficiency" value="advanced">
                         <label class="form-check-label" for="proficiencyAdvanced">Advanced</label>
                     </div>
                 </div>
-                <span class="invalid-feedback" [hidden]="!formErrors.proficiency">{{formErrors.proficiency}}</span>
+                <span class="invalid-feedback" [hidden]="!skillErrors[i].proficiency">{{skillErrors[i].proficiency}}</span>
             </div>
+        </div>
+        <div class="mb-3">
+            <button type="button" class="btn btn-primary" (click)="onAddSkillClick()" [disabled]="employeeForm.get('skills')?.invalid">
+                Add Skill
+              </button>
         </div>
     </div>
     <div class="btn-toolbar">
