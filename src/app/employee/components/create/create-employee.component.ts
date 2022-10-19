@@ -132,6 +132,10 @@ export class CreateEmployeeComponent implements OnInit {
     this.addSkillsFormGroup();
   }
 
+  onDeleteSkillClick(skillIndex: number):void{
+    this.deletekillsFormGroup(skillIndex);
+  }
+
   //#endregion [/Events]
 
   //#region [Functions]
@@ -139,6 +143,11 @@ export class CreateEmployeeComponent implements OnInit {
   addSkillsFormGroup(): void {
     (this.employeeForm.get('skills') as FormArray).push(this.getNewSkillsFormGroup());
     this.skillErrors.push(this.getNewSkillErrors());
+  }
+
+  deletekillsFormGroup(skillIndex: number): void {
+    (this.employeeForm.get('skills') as FormArray).removeAt(skillIndex);
+    this.skillErrors.splice(skillIndex, 1);
   }
 
   getNewSkillsFormGroup(): FormGroup {

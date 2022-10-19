@@ -42,6 +42,7 @@
     </div>
     <div formArrayName="skills">        
         <div [formGroupName]="i" *ngFor="let skill of castToFormArray(employeeForm.get('skills')).controls; let i = index" >
+            <hr *ngIf="i>0" />
             <div class="mb-3">
                 <label [attr.for]="'skillName['+i+']'" class="form-label">Skill</label>
                 <input formControlName="skillName" type="text" class="form-control"
@@ -78,8 +79,14 @@
                     </div>
                 </div>
                 <span class="invalid-feedback" [hidden]="!skillErrors[i].proficiency">{{skillErrors[i].proficiency}}</span>
-            </div>
+            </div>    
+            <div class="mb-3">
+                <button type="button" class="btn btn-primary" (click)="onDeleteSkillClick(i)" *ngIf="castToFormArray(employeeForm.get('skills')).controls.length>1" >
+                    Delete Skill
+                  </button>
+            </div>       
         </div>
+        
         <div class="mb-3">
             <button type="button" class="btn btn-primary" (click)="onAddSkillClick()" [disabled]="employeeForm.get('skills')?.invalid">
                 Add Skill
