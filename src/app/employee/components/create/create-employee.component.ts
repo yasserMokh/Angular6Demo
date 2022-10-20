@@ -44,9 +44,9 @@ export class CreateEmployeeComponent implements OnInit {
 
   onFormSubmitted(employeeData: Employee): void {
     console.log('onFormSubmitted', employeeData);
-    this._employeeService.createEmployee(employeeData).subscribe(() => {
-      this._router.navigate(['employee.list'])
-    });
+    // this._employeeService.createEmployee(employeeData).subscribe(() => {
+    //   this._router.navigate(['employee.list'])
+    // });
   }
   //#endregion [/Events]
 

@@ -1,5 +1,5 @@
 export class Skill {
     public skillName: string = '';
-    public experienceInYears: number = -1;
+    public experienceInYears: number | null = null;
     public proficiency: string = '';
 }

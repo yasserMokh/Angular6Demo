@@ -1,7 +1,8 @@
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { AbstractControl, FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Employee } from 'src/app/models/employee.model';
 import { EmployeeFormErrors, SkillErrors } from 'src/app/models/errors.models';
+import { Skill } from 'src/app/models/skill.model';
 import { CustomValidators } from 'src/app/shared/custom.validators';
 
 @Component({
@@ -15,8 +16,14 @@ export class EmployeeFormComponent implements OnInit {
 
   //#region [Output]
   @Output() formSubmitted: EventEmitter<Employee> = new EventEmitter<Employee>();
-
   //#endregion [Output]
+
+  //#region [Inoput]  
+  @Input()
+  set employeeModel(value: Employee) {
+    this.setFormFromEmployee(value);
+  }
+  //#endregion [/Input]
 
   //#region [Public]
   employeeForm: FormGroup;
@@ -77,7 +84,7 @@ export class EmployeeFormComponent implements OnInit {
       email: ['', [Validators.required, CustomValidators.validateEmailDomain('outlook.com')]],
       confirmEmail: ['', Validators.required],
       phone: [''],
-      skills: this._formBuilder.array([this.getNewSkillsFormGroup()])
+      skills: this._formBuilder.array([this.getSkillsFormGroup()])
     });
     /*this.employeeForm = new FormGroup({
       fullName: new FormControl(),
@@ -147,28 +154,28 @@ export class EmployeeFormComponent implements OnInit {
   }
 
   onDeleteSkillClick(skillIndex: number): void {
-    this.deletekillsFormGroup(skillIndex);
+    this.deleteSkillsFormGroup(skillIndex);
   }
 
   //#endregion [/Events]
 
   //#region [Functions]
 
-  addSkillsFormGroup(): void {
-    (this.employeeForm.get('skills') as FormArray).push(this.getNewSkillsFormGroup());
+  addSkillsFormGroup(skillFormGroup: FormGroup = this.getSkillsFormGroup()): void {
+    (this.employeeForm.get('skills') as FormArray).push(skillFormGroup);
     this.skillErrors.push(this.getNewSkillErrors());
   }
 
-  deletekillsFormGroup(skillIndex: number): void {
+  deleteSkillsFormGroup(skillIndex: number): void {
     (this.employeeForm.get('skills') as FormArray).removeAt(skillIndex);
     this.skillErrors.splice(skillIndex, 1);
   }
 
-  getNewSkillsFormGroup(): FormGroup {
+  getSkillsFormGroup(skill: Skill=new Skill()): FormGroup {    
     return this._formBuilder.group({
-      skillName: ['', Validators.required],
-      experienceInYears: ['', Validators.required],
-      proficiency: ['', Validators.required]
+      skillName: [skill.skillName, Validators.required],
+      experienceInYears: [skill.experienceInYears, Validators.required],
+      proficiency: [skill.proficiency, Validators.required]
     });
   }
 
@@ -261,8 +268,38 @@ export class EmployeeFormComponent implements OnInit {
     emp.contactPreference = formGroup.get('contactPreference')?.value;
     emp.email = formGroup.get('email')?.value;
     emp.phone = formGroup.get('phone')?.value;
+    ((formGroup.get('skills') as FormArray).controls).forEach(skillGroup => {
+      const skill: Skill = {
+        skillName: skillGroup.get('skillName')?.value,
+        experienceInYears: skillGroup.get('experienceInYears')?.value,
+        proficiency: skillGroup.get('proficiency')?.value
+      };
+      emp.skills.push(skill);
+    });
 
     return emp;
+  }
+
+  setFormFromEmployee(employee: Employee): void {
+
+    console.log('setFormFromEmployee', 'employee', employee);
+
+    this.employeeForm.get('fullName')?.setValue(employee.fullName);
+    this.employeeForm.get('contactPreference')?.setValue(employee.contactPreference);
+    this.employeeForm.get('email')?.setValue(employee.email);
+    this.employeeForm.get('phone')?.setValue(employee.phone);
+
+    if(!employee.skills || !employee.skills.length){
+      return;
+    }
+    this.deleteSkillsFormGroup(0);
+    for (let i = 0; i < employee.skills.length; i++) {
+      const skillFormGroup=this.getSkillsFormGroup(employee.skills[i]);
+      console.log('skillFormGroup-', i, '---', skillFormGroup,);
+      this.addSkillsFormGroup(skillFormGroup);
+    }
+
+
   }
 
   //#endregion [/Functions]
