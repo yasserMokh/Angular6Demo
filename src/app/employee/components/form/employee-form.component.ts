@@ -162,7 +162,7 @@ export class EmployeeFormComponent implements OnInit {
     this.deleteSkillsFormGroup(skillIndex);
   }
 
-  onEmailChange(): void{
+  onEmailChange(): void {
     this.employeeForm.get('confirmEmail')?.updateValueAndValidity();
   }
 
@@ -270,21 +270,21 @@ export class EmployeeFormComponent implements OnInit {
     return control as FormArray;
   }
 
-  updateEmployeeModelFromForm(formGroup: FormGroup = this.employeeForm): void {    
-    this._employeeModel.fullName = formGroup.get('fullName')?.value;
-    this._employeeModel.contactPreference = formGroup.get('contactPreference')?.value;
-    this._employeeModel.email = formGroup.get('email')?.value;
-    this._employeeModel.confirmEmail = formGroup.get('confirmEmail')?.value;
-    this._employeeModel.phone = formGroup.get('phone')?.value;
-    this._employeeModel.skills=[];
-    ((formGroup.get('skills') as FormArray).controls).forEach(skillGroup => {
+  updateEmployeeModelFromForm(formGroup: FormGroup = this.employeeForm): void {
+    this._employeeModel.fullName = this.employeeForm.value.fullName;
+    this._employeeModel.contactPreference = this.employeeForm.value.contactPreference;
+    this._employeeModel.email = this.employeeForm.value.email;
+    this._employeeModel.confirmEmail = this.employeeForm.value.confirmEmail;
+    this._employeeModel.phone = this.employeeForm.value.phone;
+    this._employeeModel.skills = this.employeeForm.value.skills;
+   /*  ((formGroup.get('skills') as FormArray).controls).forEach(skillGroup => {
       const skill: Skill = {
         skillName: skillGroup.get('skillName')?.value,
         experienceInYears: skillGroup.get('experienceInYears')?.value,
         proficiency: skillGroup.get('proficiency')?.value
       };
       this._employeeModel.skills.push(skill);
-    });
+    }); */
   }
 
   setFormFromEmployee(employee: Employee): void {
