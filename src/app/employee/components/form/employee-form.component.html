@@ -24,7 +24,7 @@
     <div class="mb-3">
         <label for="email" class="form-label">Email</label>
         <input formControlName="email" type="text" class="form-control" [class.is-invalid]="formErrors.email"
-            (blur)="logValidationErrors()" id="email" name="email">
+            (blur)="logValidationErrors()" (change)="onEmailChange()" id="email" name="email">
         <span class="invalid-feedback" [hidden]="!formErrors.email">{{formErrors.email}}</span>
     </div>
     <div class="mb-3">

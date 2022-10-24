@@ -58,8 +58,8 @@ export class EditEmployeeComponent implements OnInit {
     });
   }
 
-  onFormSubmitted(employeeData: Employee): void {
-    console.log('onFormSubmitted', employeeData);
+  onFormSubmitted(employeeData: Employee): void { 
+    console.log('employeeData', employeeData);   
     this._employeeService.saveEmployee(employeeData).subscribe(() => {
       this._router.navigate(['employee.list'])
     });

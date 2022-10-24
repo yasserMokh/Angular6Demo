@@ -1,47 +1,89 @@
 {
-    "employees": [
+  "employees": [
+    {
+      "id": 1,
+      "fullName": "Mark",
+      "contactPreference": "email",
+      "email": "mark@outlook.com",
+      "confirmEmail": "mark@outlook.com",
+      "phone": "5641238971",
+      "skills": [
         {
-            "id": 1,
-            "fullName": "Mark",
-            "contactPreference": "email",
-            "email": "mark@email.com",
-            "phone": "5641238971",
-            "skills": [
-                {
-                    "skillName": "C#",
-                    "experienceInYears": 1,
-                    "proficiency": "beginner"
-                },
-                {
-                    "skillName": "Java",
-                    "experienceInYears": 2,
-                    "proficiency": "intermediate"
-                }
-            ]
+          "skillName": "C#",
+          "experienceInYears": 1,
+          "proficiency": "beginner"
         },
         {
-            "id": 2,
-            "fullName": "John",
-            "contactPreference": "phone",
-            "email": "john@email.com",
-            "phone": "3242138971",
-            "skills": [
-                {
-                    "skillName": "Angular",
-                    "experienceInYears": 2,
-                    "proficiency": "beginner"
-                },
-                {
-                    "skillName": "HTML",
-                    "experienceInYears": 2,
-                    "proficiency": "intermediate"
-                },
-                {
-                    "skillName": "LINQ",
-                    "experienceInYears": 3,
-                    "proficiency": "advanced"
-                }
-            ]
+          "skillName": "Java",
+          "experienceInYears": 2,
+          "proficiency": "intermediate"
+        },
+        {
+          "skillName": "C#",
+          "experienceInYears": 1,
+          "proficiency": "beginner"
+        },
+        {
+          "skillName": "Java",
+          "experienceInYears": 2,
+          "proficiency": "intermediate"
         }
-    ]
+      ]
+    },
+    {
+      "id": 2,
+      "fullName": "John",
+      "contactPreference": "phone",
+      "email": "john@outlook.com",
+      "confirmEmail": "john@email.com",
+      "phone": "3242138971",
+      "skills": [
+        {
+          "skillName": "Angular",
+          "experienceInYears": 2,
+          "proficiency": "beginner"
+        },
+        {
+          "skillName": "HTML",
+          "experienceInYears": 2,
+          "proficiency": "intermediate"
+        },
+        {
+          "skillName": "LINQ",
+          "experienceInYears": 3,
+          "proficiency": "advanced"
+        },
+        {
+          "skillName": "Angular",
+          "experienceInYears": 2,
+          "proficiency": "beginner"
+        },
+        {
+          "skillName": "HTML",
+          "experienceInYears": 2,
+          "proficiency": "intermediate"
+        },
+        {
+          "skillName": "LINQ",
+          "experienceInYears": 3,
+          "proficiency": "advanced"
+        }
+      ]
+    },
+    {
+      "id": -1,
+      "fullName": "John",
+      "email": "john@outlook.com",
+      "confirmEmail": "john@outlook.com",
+      "phone": "3242138971",
+      "contactPreference": "phone",
+      "skills": [
+        {
+          "skillName": "Angular",
+          "experienceInYears": 2,
+          "proficiency": "beginner"
+        }
+      ]
+    }
+  ]
 }

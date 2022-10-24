@@ -14,32 +14,8 @@ export class EmployeeFormComponent implements OnInit {
 
   //#region [Members]
 
-  //#region [Output]
-  @Output() formSubmitted: EventEmitter<Employee> = new EventEmitter<Employee>();
-  //#endregion [Output]
-
-  //#region [Inoput]  
-  @Input()
-  set employeeModel(value: Employee) {
-    this.setFormFromEmployee(value);
-  }
-  //#endregion [/Input]
-
-  //#region [Public]
-  employeeForm: FormGroup;
-
-  formErrors: EmployeeFormErrors = {
-    fullName: '',
-    contactPreference: '',
-    email: '',
-    confirmEmail: '',
-    phone: ''
-  };
-
-  skillErrors: SkillErrors[] = [this.getNewSkillErrors()];
-  //#endregion [/Public]
-
   //#region [Private]
+  private _employeeModel: Employee = new Employee();
   private validationMessages = {
     'fullName': {
       'required': 'Full Name is required.',
@@ -51,7 +27,8 @@ export class EmployeeFormComponent implements OnInit {
     },
     'email': {
       'required': 'Email is required.',
-      'emailDomainNotValid': 'Email domain not valid.'
+      'emailDomainNotValid': 'Email domain not valid.',
+      'valueMismatch': 'Email and Confirm Email do not match.'
     },
     'confirmEmail': {
       'required': 'Confirm Email is required.',
@@ -71,6 +48,32 @@ export class EmployeeFormComponent implements OnInit {
     },
   };
   //#endregion [/Private]
+
+  //#region [Output]
+  @Output() formSubmitted: EventEmitter<Employee> = new EventEmitter<Employee>();
+  //#endregion [Output]
+
+  //#region [Inoput]  
+  @Input()
+  set employeeModel(value: Employee) {
+    this._employeeModel = value;
+    this.setFormFromEmployee(value);
+  }
+  //#endregion [/Input]
+
+  //#region [Public]
+  employeeForm: FormGroup;
+
+  formErrors: EmployeeFormErrors = {
+    fullName: '',
+    contactPreference: '',
+    email: '',
+    confirmEmail: '',
+    phone: ''
+  };
+
+  skillErrors: SkillErrors[] = [this.getNewSkillErrors()];
+  //#endregion [/Public]
 
   //#endregion [/Members]
 
@@ -103,6 +106,7 @@ export class EmployeeFormComponent implements OnInit {
 
   ngOnInit(): void {
     this.employeeForm.get('confirmEmail')?.addValidators(CustomValidators.confirmValidator(this.employeeForm.get('email')));
+    //this.employeeForm.get('email')?.addValidators(CustomValidators.confirmValidator(this.employeeForm.get('confirmEmail')));
     this.employeeForm.valueChanges.subscribe(data => {
       this.logValidationErrors(this.employeeForm);
     });
@@ -117,7 +121,8 @@ export class EmployeeFormComponent implements OnInit {
     if (!this.employeeForm.valid) {
       return;
     }
-    this.formSubmitted.emit(this.getEmployeeFromForm());
+    this.updateEmployeeModelFromForm();
+    this.formSubmitted.emit(this._employeeModel);
     this.employeeForm.reset();
   }
 
@@ -157,6 +162,10 @@ export class EmployeeFormComponent implements OnInit {
     this.deleteSkillsFormGroup(skillIndex);
   }
 
+  onEmailChange(): void{
+    this.employeeForm.get('confirmEmail')?.updateValueAndValidity();
+  }
+
   //#endregion [/Events]
 
   //#region [Functions]
@@ -171,7 +180,7 @@ export class EmployeeFormComponent implements OnInit {
     this.skillErrors.splice(skillIndex, 1);
   }
 
-  getSkillsFormGroup(skill: Skill=new Skill()): FormGroup {    
+  getSkillsFormGroup(skill: Skill = new Skill()): FormGroup {
     return this._formBuilder.group({
       skillName: [skill.skillName, Validators.required],
       experienceInYears: [skill.experienceInYears, Validators.required],
@@ -213,7 +222,7 @@ export class EmployeeFormComponent implements OnInit {
       const control = formGroup.get(key);
       const k = key as keyof typeof this.formErrors;
       this.formErrors[k] = '';
-      if (control && !control.valid && (control.touched || control.dirty)) {
+      if (control && !control.valid && (control.touched || control.dirty || control.value !== '')) {
         // const kk = key as keyof typeof this.validationMessages;
         const messages = this.validationMessages[k];
         for (const errorKey in control.errors) {
@@ -261,44 +270,47 @@ export class EmployeeFormComponent implements OnInit {
     return control as FormArray;
   }
 
-  getEmployeeFromForm(formGroup: FormGroup = this.employeeForm): Employee {
-    const emp: Employee = new Employee();
-
-    emp.fullName = formGroup.get('fullName')?.value;
-    emp.contactPreference = formGroup.get('contactPreference')?.value;
-    emp.email = formGroup.get('email')?.value;
-    emp.phone = formGroup.get('phone')?.value;
+  updateEmployeeModelFromForm(formGroup: FormGroup = this.employeeForm): void {    
+    this._employeeModel.fullName = formGroup.get('fullName')?.value;
+    this._employeeModel.contactPreference = formGroup.get('contactPreference')?.value;
+    this._employeeModel.email = formGroup.get('email')?.value;
+    this._employeeModel.confirmEmail = formGroup.get('confirmEmail')?.value;
+    this._employeeModel.phone = formGroup.get('phone')?.value;
+    this._employeeModel.skills=[];
     ((formGroup.get('skills') as FormArray).controls).forEach(skillGroup => {
       const skill: Skill = {
         skillName: skillGroup.get('skillName')?.value,
         experienceInYears: skillGroup.get('experienceInYears')?.value,
         proficiency: skillGroup.get('proficiency')?.value
       };
-      emp.skills.push(skill);
+      this._employeeModel.skills.push(skill);
     });
-
-    return emp;
   }
 
   setFormFromEmployee(employee: Employee): void {
 
-    console.log('setFormFromEmployee', 'employee', employee);
+    this.employeeForm.patchValue({
+      fullName: employee.fullName,
+      contactPreference: employee.contactPreference,
+      email: employee.email,
+      confirmEmail: employee.confirmEmail,
+      phone: employee.phone
+    });
 
-    this.employeeForm.get('fullName')?.setValue(employee.fullName);
-    this.employeeForm.get('contactPreference')?.setValue(employee.contactPreference);
-    this.employeeForm.get('email')?.setValue(employee.email);
-    this.employeeForm.get('phone')?.setValue(employee.phone);
+    // this.employeeForm.get('fullName')?.setValue(employee.fullName);
+    // this.employeeForm.get('contactPreference')?.setValue(employee.contactPreference);
+    // this.employeeForm.get('email')?.setValue(employee.email);
+    // this.employeeForm.get('confirmEmail')?.setValue(employee.confirmEmail);
+    // this.employeeForm.get('phone')?.setValue(employee.phone);
 
-    if(!employee.skills || !employee.skills.length){
+    if (!employee.skills || !employee.skills.length) {
       return;
     }
     this.deleteSkillsFormGroup(0);
     for (let i = 0; i < employee.skills.length; i++) {
-      const skillFormGroup=this.getSkillsFormGroup(employee.skills[i]);
-      console.log('skillFormGroup-', i, '---', skillFormGroup,);
+      const skillFormGroup = this.getSkillsFormGroup(employee.skills[i]);
       this.addSkillsFormGroup(skillFormGroup);
     }
-
 
   }
 

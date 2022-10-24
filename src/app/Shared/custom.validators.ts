@@ -18,15 +18,18 @@ export class CustomValidators{
 
     static confirmValidator(controlToCompareWith: AbstractControl | null){
         return (controlToCompare: AbstractControl): {[key: string] : any} | null =>{
+          //console.log('confirmValidator');
             if(!controlToCompare || !controlToCompare.value){
-                console.log('No Value !');
+                //console.log('No Value !');
                 return null;
             }
           if(controlToCompare.value.toLocaleLowerCase() === controlToCompareWith?.value.toLocaleLowerCase()){
-            console.log('Success :)');
+            //console.log('Success :)');
             return null;
           }
-          console.log('Wrong XXX');
+          //console.log('Wrong XXX');
+          //console.log('controlToCompare', controlToCompare.value);
+          //console.log('controlToCompareWith', controlToCompareWith?.value);          
           return {'valueMismatch': true};
         }
       }
