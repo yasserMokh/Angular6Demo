@@ -17,16 +17,6 @@
           "skillName": "Java",
           "experienceInYears": 2,
           "proficiency": "intermediate"
-        },
-        {
-          "skillName": "C#",
-          "experienceInYears": 1,
-          "proficiency": "beginner"
-        },
-        {
-          "skillName": "Java",
-          "experienceInYears": 2,
-          "proficiency": "intermediate"
         }
       ]
     },
@@ -35,33 +25,18 @@
       "fullName": "John",
       "contactPreference": "phone",
       "email": "john@outlook.com",
-      "confirmEmail": "john@email.com",
+      "confirmEmail": "john@outlook.com",
       "phone": "3242138971",
       "skills": [
         {
-          "skillName": "Angular",
-          "experienceInYears": 2,
-          "proficiency": "beginner"
-        },
-        {
           "skillName": "HTML",
           "experienceInYears": 2,
           "proficiency": "intermediate"
         },
         {
-          "skillName": "LINQ",
-          "experienceInYears": 3,
-          "proficiency": "advanced"
-        },
-        {
           "skillName": "Angular",
           "experienceInYears": 2,
           "proficiency": "beginner"
-        },
-        {
-          "skillName": "HTML",
-          "experienceInYears": 2,
-          "proficiency": "intermediate"
         },
         {
           "skillName": "LINQ",
@@ -71,7 +46,7 @@
       ]
     },
     {
-      "id": -1,
+      "id": 3,
       "fullName": "JohnQ",
       "email": "john@outlook.com",
       "confirmEmail": "john@outlook.com",
@@ -82,6 +57,21 @@
           "skillName": "Angular",
           "experienceInYears": 2,
           "proficiency": "beginner"
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "fullName": "Yasser Hussein",
+      "email": "yasser.moukhtar@outlook.com",
+      "confirmEmail": "yasser.moukhtar@outlook.com",
+      "phone": "+4917628061628",
+      "contactPreference": "email",
+      "skills": [
+        {
+          "skillName": "C#",
+          "experienceInYears": 5,
+          "proficiency": "intermediate"
         }
       ]
     }

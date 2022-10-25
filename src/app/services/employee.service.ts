@@ -4,9 +4,7 @@ import { Observable } from 'rxjs';
 
 import { Employee } from '../models/employee.model';
 
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable()
 export class EmployeeService {
 
   private _baseUrl:string = 'http://localhost:3000/employees'
@@ -28,7 +26,8 @@ export class EmployeeService {
   }
 
 
-  createEmployee(employee: Employee): Observable<Employee> {    
+  createEmployee(employee: Employee): Observable<Employee> {   
+    //employee.id = undefined; 
     return this._httpClient.post<Employee>(this._baseUrl, employee);
   }
 
